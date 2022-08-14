@@ -1,0 +1,113 @@
+All graphics programs have classes for storing geometric vectors and colors.
+Vectors are 4D -> (3D homogeneous coordinate used for geometry and RGB + alpha transparancy channel for colors)colors.
+
+
+The ray_color(ray) function linearly blends white and blue 
+depending on the height of the y coordinate after scaling the ray direction to unit length (so −1.0<y<1.0).
+When t=1.0 I want blue. When t=0.0 I want white.
+Linear blend formula: 
+blendedValue=(1−t)⋅startValue+t⋅endValue,
+
+
+One thing to be aware of is that we tested whether the ray hits the sphere at all, but t<0 solutions work fine.
+change your sphere center to z=+1 you will get exactly the same picture because you see the things behind you.
+
+Ray sphere intersection code simplified:
+b = 2h
+= (-h+-√(h^2-ac))/a
+
+diffuse (matte) materials. One question is whether we mix and match geometry and materials (so we can assign a material to multiple spheres, or vice versa) or if geometry and material are tightly bound (that could be useful for procedural objects where the geometry and material are linked). 
+We’ll go with separate — which is usual in most renderers — but do be aware of the limitation. 
+
+Diffuse objects that don’t emit light merely take on the color of their surroundings, but they modulate that with 
+their own intrinsic color. 
+Light that reflects off a diffuse surface has its direction randomized. 
+So, if we send three rays into a crack between two diffuse surfaces they will each have different random behavior:
+They also might be absorbed rather than reflected. The darker the surface, the more likely absorption is.
+(That’s why it is dark!) Really any algorithm that randomizes direction will produce surfaces that look matte. 
+One of the simplest ways to do this turns out to be exactly correct for ideal diffuse surfaces. 
+(I used to do it as a lazy hack that approximates mathematically ideal Lambertian.) 
+
+There are two unit radius spheres tangent to the hit point p of a surface. 
+These two spheres have a center of (P+n) and (P−n), where n is the normal of the surface. 
+The sphere with a center at (P−n) is considered inside the surface, whereas the sphere with center (P+n) is 
+considered outside the surface. Select the tangent unit radius sphere that is on the same side of the surface as the ray origin. 
+Pick a random point S inside this unit radius sphere and send a ray from the hit point P to the random point S (this is the vector (S−P)):
+
+update the ray_color() function to use the new random direction generator:
+Notice that the ray_color function is recursive. When will it stop recursing? When it fails to hit anything. 
+In some cases, however, that may be a long time — long enough to blow the stack. To guard against that, 
+let's limit the maximum recursion depth, returning no light contribution at the maximum depth:
+
+
+8.2: Gamma Correction
+This picture is very dark, but our spheres only absorb half the energy on each bounce, so they are 50% reflectors.
+These spheres should look pretty light (in real life, a light grey). The reason for this is that 
+almost all image viewers assume that the image is “gamma corrected”, 
+meaning the 0 to 1 values have some transform before being stored as a byte.
+
+The rejection method presented here produces random points in the unit ball offset along the surface normal. 
+This corresponds to picking directions on the hemisphere with high probability close to the normal, 
+and a lower probability of scattering rays at grazing angles. 
+This distribution scales by the cos^3(ϕ) where ϕ is the angle from the normal. 
+This is useful since light arriving at shallow angles spreads over a larger area, and thus has a lower contribution to the final color.
+
+
+It's hard to tell the difference between these two diffuse methods, given that our scene of two spheres is so simple, 
+but you should be able to notice two important visual differences:
+
+1. The shadows are less pronounced after the change
+2. Both spheres are lighter in appearance after the change
+
+Both of these changes are due to the more uniform scattering of the light rays, fewer rays are scattering toward the normal. 
+This means that for diffuse objects, they will appear lighter because more light bounces toward the camera. 
+For the shadows, less light bounces straight-up, so the parts of the larger sphere directly underneath the smaller sphere are brighter.
+
+The initial hack presented in this book lasted a long time before 
+it was proven to be an incorrect approximation of ideal Lambertian diffuse. 
+A big reason that the error persisted for so long is that it can be difficult to:
+
+    Mathematically prove that the probability distribution is incorrect
+    Intuitively explain why a cos(ϕ)
+
+distribution is desirable (and what it would look like)
+
+If the random unit vector we generate is exactly opposite the normal vector, the two will sum to zero, which will result in a 
+zero scatter direction vector. 
+This leads to bad scenarios later on (infinities and NaNs), so we need to intercept the condition before we pass it on. 
+
+
+The refraction is described by Snell’s law:
+
+η⋅sinθ=η′⋅sinθ′
+
+Where θ
+and θ′ are the angles from the normal, and η and η′ (pronounced “eta” and “eta prime”) are the refractive indices 
+(typically air = 1.0, glass = 1.3–1.7, diamond = 2.4).
+
+In order to determine the direction of the refracted ray, we have to solve for sinθ′:
+
+sinθ′= (η/η′) ⋅sinθ
+
+On the refracted side of the surface there is a refracted ray R′ and a normal n′, and there exists an angle, θ′, 
+between them. We can split R′ into the parts of the ray that are perpendicular to n′ and parallel to n′: 
+
+R′=R′⊥+R′_∥
+
+If we solve for R′⊥ and R′∥ we get:
+
+R′⊥=(η/η′)(R+cosθn)
+
+R′_∥ =−√(1−(|R′⊥|^2)n)
+
+We still need to solve for cosθ. It is well known that the dot product of two vectors can be 
+explained in terms of the cosine of the angle between them: 
+
+a⋅b=|a||b|cosθ
+
+If we restrict a and b to be unit vectors: 
+a⋅b=cosθ
+
+We can now rewrite R′⊥ in terms of known quantities: 
+R′⊥= (η/η′)(R+(−R⋅n)n)
+
