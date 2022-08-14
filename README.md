@@ -15,6 +15,7 @@ Install the project by using git to create a local repository
   g++ ray.cpp -o ray -fopenacc -O3 -fopt-info-optimized-omp -march=native
 4. Finally in order to render the image, output the file stream to a ppm image format
   ./ray > "filename".ppm
-5. The image will be located in your project directory and can be viewed with a online ppm viewer such as https://www.cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html
+5. The image will be located in your project directory and can be viewed 
+    with a online ppm viewer such as https://www.cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html
 ```
     
