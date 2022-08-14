@@ -1,21 +1,42 @@
 # Ray-Tracer
+
 A basic Ray tracer made from Peter Shirley's Ray tracing in one weekend series
 
+In order to compile the project, C++17 or greater must be installed,
+along with the GNU compiler
 
-## Installation
 
-Install the project by using git to create a local repository
+
+## Run Locally
+
+Clone the project
 
 ```bash
-1. First clone the repo onto your local machine:
-  git clone https://github.com/ahmadadil950/Ray-Tracer.git
-2. Next enter into the project folder
-  cd ray
-3. Compile the project using the command below
-  g++ ray.cpp -o ray -fopenacc -O3 -fopt-info-optimized-omp -march=native
-4. Finally in order to render the image, output the file stream to a ppm image format
-  ./ray > "filename".ppm
-5. The image will be located in your project directory and can be viewed 
-    with a online ppm viewer such as https://www.cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html
+  git clone https://github.com/ahmadadil950/RayTracer.git
 ```
-    
+
+Go to the project directory
+
+```bash
+  cd ray
+```
+
+Run program using GNU compiler
+
+```bash
+  g++ ray.cpp -o ray -fopenacc -O3 -fopt-info-optimized-omp -march=native
+```
+
+Finally in order to render the image, output the file stream to a ppm image format
+
+```bash
+  ./ray > "filename".ppm
+```
+
+Then to view image, use online ppm file viewer
+
+```bash
+https://www.cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html
+```
+
+
