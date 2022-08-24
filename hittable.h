@@ -1,13 +1,7 @@
-
 /*Abstract class for anything a ray will hit
 This hittable abstract class will have a hit function that takes in a ray. Most ray tracers have found it 
 convenient to add a valid interval 
 for hits tmin to tmax, so the hit only “counts” if tmin<t<tmax. For the initial rays this is positive t*/
-
-
-
-
-
 
 #ifndef hittable_h
 #define hittable_h
@@ -41,4 +35,3 @@ public:
 };
 
 #endif
-

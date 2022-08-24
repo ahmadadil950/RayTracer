@@ -17,11 +17,11 @@ all: $(OBJS)
 ray.o: ray.cpp
 	$(CC) $(FLAGS) ray.cpp
 
+# run the program
+run: $(OUT)
+		./$(OUT)
+
 
 # clean house
 clean:
 	rm -f $(OBJS) $(OUT)
-
-# run the program
-run: $(OUT)
-	./$(OUT)
