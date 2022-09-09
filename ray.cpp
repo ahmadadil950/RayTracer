@@ -162,7 +162,7 @@ int main()
     std:: cin >> user_image_width;
     const int image_width = user_image_width;
     const int image_height = static_cast<int>(image_width/aspect_Ratio);
-    std::cerr << "Enter the number of sameples for each pixel (EX: 500 is less noisy, but takes much longer)" << std::endl;
+    std::cerr << "Enter the number of samples for each pixel (EX: 500 is less noisy, but takes much longer)" << std::endl;
     std::cin >> pixelSample;
     std::cerr << "\n" << std::endl;
     const int samples_per_Pixel = pixelSample;
