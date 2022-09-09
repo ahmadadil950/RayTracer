@@ -13,7 +13,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Install Packages
-      run: sudo apt install gcc-9-offload-nvptx
     - name: make
       run: make
