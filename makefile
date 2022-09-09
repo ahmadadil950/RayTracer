@@ -10,7 +10,7 @@ HEADER = ray.h color.h camera.h hittable_list.h hittable.h material.h rt.h spher
 #COMPILER_FLAGS specifies the additional compilation options we're using
 # -w suppresses all warnings
 # -Wl,-subsystem,windows gets rid of the console window
-COMPILER_FLAGS = -fopenacc -fopt-info-optimized-omp 
+COMPILER_FLAGS = -fopenacc -fopt-info-optimized-omp -fcf-protection=none  -fno-stack-protector
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = ray
