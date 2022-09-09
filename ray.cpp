@@ -53,7 +53,6 @@ double hit_Sphere(const point3 &center, double radius, const ray& r)
     }
 }
 
-#pragma acc routine seq
 color ray_color(const ray &r, const hittable& world, int depth)
 {
     hit_record rec;
