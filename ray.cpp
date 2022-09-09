@@ -83,10 +83,9 @@ hittable_list random_scene()
     auto ground_material = make_shared<lambertian>(color(0.5,0.5,0.5));
 
     world.add(make_shared<sphere>(point3(0,-1000.0,0), 1000.0, ground_material));
-    #pragma acc parallel loop gang worker
+    #pragma acc kernals
     for(int x = -11; x < 11; x++)
     {
-        #pragma acc loop vector
         for(int y = -11; y < 11; y++)
         {
             auto choose_mat = random_double();
