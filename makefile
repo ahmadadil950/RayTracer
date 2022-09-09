@@ -1,27 +1,20 @@
-OBJS	= ray.o
-SOURCE	= ray.cpp
-HEADER	= ray.h color.h camera.h hittable_list.h hittable.h material.h rt.h sphere.h vec3.h
-OUT	= ray
-CC	 = g++
-FLAGS	 = -g -c -fopenacc -O3 -fopt-info-optimized-omp -march=native
-LFLAGS	 = -fopenacc -fopenacc -O3 -fopt-info-optimized-omp -march=native
-# -g option enables debugging mode 
-# -c flag generates object code for separate files
+#OBJS specifies which files to compile as part of the project
+OBJS =  ray.cpp
 
+#CC specifies which compiler we're using
+CC = g++
 
-all: $(OBJS)
-	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
+#INCLUDE_PATHS specifies the additional include paths we'll need
+HEADER = ray.h color.h camera.h hittable_list.h hittable.h material.h rt.h sphere.h vec3.h
 
+#COMPILER_FLAGS specifies the additional compilation options we're using
+# -w suppresses all warnings
+# -Wl,-subsystem,windows gets rid of the console window
+COMPILER_FLAGS = -fopenacc -O3 -fopt-info-optimized-omp -march=native -fno-stack-protector
 
-# create/compile the individual files >>separately<<
-ray.o: ray.cpp
-	$(CC) $(FLAGS) ray.cpp
+#OBJ_NAME specifies the name of our exectuable
+OBJ_NAME = ray
 
-# run the program
-run: $(OUT)
-		./$(OUT)
-
-
-# clean house
-clean:
-	rm -f $(OBJS) $(OUT)
+#This is the target that compiles our executable
+all : $(OBJS)
+	$(CC) $(OBJS) $(COMPILER_FLAGS) -o $(OBJ_NAME)

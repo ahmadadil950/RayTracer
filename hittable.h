@@ -3,7 +3,7 @@ This hittable abstract class will have a hit function that takes in a ray. Most 
 convenient to add a valid interval 
 for hits tmin to tmax, so the hit only “counts” if tmin<t<tmax. For the initial rays this is positive t*/
 
-#ifndef hittable_h
+#ifndef hittable_h 
 #define hittable_h
 
 #include "ray.h"
